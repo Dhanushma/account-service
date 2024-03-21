@@ -41,6 +41,5 @@ public class CustomerDTO {
     @Schema(
             description = "Account details of the Customer"
     )
-    @NotEmpty
     private AccountsDTO accountsDTO;
 }
