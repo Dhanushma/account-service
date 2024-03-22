@@ -1,11 +1,11 @@
 package com.kd.accounts.controller;
 
 import com.kd.accounts.constants.AccountConstant;
+import com.kd.accounts.dto.ContactsDTO;
 import com.kd.accounts.dto.CustomerDTO;
 import com.kd.accounts.dto.ErrorResponseDTO;
 import com.kd.accounts.dto.ResponseDTO;
 import com.kd.accounts.service.AccountService;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,7 +14,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/accounts")
-@AllArgsConstructor
 @Validated
 @Tag(
         name = "CRUD REST APIs for Accounts in EazyBank",
@@ -30,7 +30,14 @@ import org.springframework.web.bind.annotation.*;
 )
 public class AccountsController {
 
+    @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private ContactsDTO contactsDTO;
+
+    @Value("${build.version}")
+    private String buildVersion;
 
     @Operation(
             summary = "Create Account REST API",
@@ -153,5 +160,51 @@ public class AccountsController {
                     .status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseDTO(AccountConstant.STATUS_417, AccountConstant.MESSAGE_417_UPDATE));
         }
+    }
+
+    @Operation(
+            summary = "Fetch Account Service Build Version",
+            description = "REST API to fetch Account Service Build Version"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/buildVersion")
+    public ResponseEntity<String> getBuildVersion(){
+        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
+
+    @Operation(
+            summary = "Fetch Contact Info",
+            description = "REST API to fetch contact details"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/contactInfo")
+    public ResponseEntity<ContactsDTO> getContactInfo(){
+        return ResponseEntity.status(HttpStatus.OK).body(contactsDTO);
     }
 }

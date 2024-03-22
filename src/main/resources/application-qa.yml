@@ -1,0 +1,8 @@
+build:
+  version: V1
+
+accounts:
+  message: welcome to Account services QA
+  contactInfo:
+    name: George
+    mail: george.1@gmail.com
