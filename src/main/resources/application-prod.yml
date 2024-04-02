@@ -1,8 +1,0 @@
-build:
-  version: V1
-
-accounts:
-  message: welcome to Account services PROD
-  contactInfo:
-    name: Ben
-    mail: ben.1@gmail.com
